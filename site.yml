@@ -1,4 +1,31 @@
 ---
+- name: In Memory Inventory
+  hosts: localhost
+  gather_facts: false
+  become: false
+  tags:
+    - InMemoryInventory
+
+  tasks:
+    - name: Fetch Instance Info
+      os_server_info:
+        cloud: openstack
+        region_name: regionOne
+      register: r_os_servers
+
+    - name: Print servers
+      debug: 
+        msg: "Server: {{ item.public_v4 }}  group: {{ item.metadata.group }}, {{ item.metadata.deployment_name }}"
+      loop: "{{ r_os_servers.openstack_servers }}"
+
+    - name: Add hosts
+      add_host:
+        name: "{{ item.public_v4 }}"
+        group: 
+          - "{{ item.metadata.group }}"
+          - "{{ item.metadata.deployment_name }}"
+      loop: "{{ r_os_servers.openstack_servers }}"
+
 - import_playbook: provision_database_tier.yml                                                  
 - import_playbook: provision_app_tier.yml                                                       
 - import_playbook: provision_load_balancer_tier.yml
