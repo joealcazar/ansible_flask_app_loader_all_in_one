@@ -364,7 +364,14 @@ ansible all -m yum -a 'name='*' state=latest' -b -i hosts && ansible all -m rebo
 
 
 
+Homework Fixes
 
+
+Step 4.4 - 2
+
+source credential.rc; ./order_svc.sh -y -c 'OPENTLC Automation' -i 'Ansible Advanced - Three Tier App' -t 1 -d 'dialog_expiration=7;region=na;nodes=1;dialog_runtime=8;notes=Training - As part of course'
+
+Skip step 4.4 - 3
 
 
 
