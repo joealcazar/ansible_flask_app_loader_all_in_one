@@ -1,0 +1,370 @@
+Ansible Advanced Feb 22th - 25th
+
+Instructor: Wilson Harris
+email: wharris@redhat.com
+
+BlueJeans Link: https://bluejeans.com/885549777
+BETA Slides link: https://www.opentlc.com/download/ansible_bootcamp/course/
+Labs Site: https://labs.opentlc.com/
+
+Attendence:
+    Luis Miguel Rodriguez 
+    lrodriguez@interware.com.mx
+ multi-tier guid: deab
+tower guid:97b8
+windows guid:
+osp guid:
+    
+    Hernan Pablo Miguel
+    miguelhp@ar.ibm.com
+multi-tier guid: 67e3
+tower guid: 7968
+windows guid: 8d92
+osp guid:
+
+Luciano Luna Stepaniuk
+lunal@ar.ibm.com
+multi-tier guid: 9834
+tower guid: cb9c
+windows guid: 41c0
+osp guid: f5a7
+
+Luis Tiani
+    lutiani@br.ibm.com
+multi-tier guid: 57a2
+tower guid: a51f
+windows guid: 6caa
+osp guid:
+
+Edmar Cardoso -  edmar.campos.cardoso@ibm.com
+multi-tier guid:
+tower guid:
+windows guid:
+osp guid:
+
+    Danilo Steluti - dsteluti@br.ibm.com
+multi-tier guid:2533
+tower guid:
+windows guid:
+osp guid:
+
+Rodrigo Ramalho 
+rramalho@redhat.com
+multi-tier guid:
+tower guid:
+windows guid:
+osp guid:
+
+
+Jose Alcazar
+jalcazar@redhat.com
+multi-tier guid: 60cf
+tower guid: d85a
+windows guid: 9f92
+osp guid:
+
+Wilson Harris
+wharris@redhat.com
+multi-tier guid: cd58
+tower guid: 5207
+windows guid: 10ec
+osp guid:
+
+   Ricardo Chiappe
+   ricardo.chiappe@entelgy.com
+multi-tier guid: eef8
+tower guid:
+windows guid:
+osp guid:
+
+Emilio Buchaillot
+emilio.buchaillot@semperti.com
+multi-tier guid: 724e
+tower guid: 3d9e
+windows guid: 9871
+osp guid: 2bb1
+
+Gonzalo Acosta
+gonzalo.acosta@semperti.com
+multi-tier guid: e905
+tower guid: 873c
+windows guid: 26ab
+osp guid: 51c5
+
+    Edmar Car
+
+Everton Nunes
+enunes@redhat.com
+multi-tier guid: 4a30
+tower guid:
+windows guid:
+osp guid:
+
+Germano Da Silva
+gedasilv@redhat.com
+multi-tier guid: 7710
+tower guid: aab3
+windows guid: 9f93
+osp guid:
+
+Zachary LeBlanc
+zleblanc@redhat.com
+multi-tier guid: 06e0
+tower guid: 973b
+windows guid: 3a48
+osp guid: dbf6
+
+Fernando Gonzalez
+fernando.gonzalez@semperti.com
+multi-tier guid: 49f2
+tower guid: 90e6
+windows guid:
+osp guid:
+
+Things to try:
+
+
+Helpful Links:
+    IBM Cloud collection: 
+        Article: https://www.ibm.com/cloud/blog/announcements/ibm-cloud-collection-for-ansible
+        github: https://github.com/IBM-Cloud/ansible-collection-ibm/
+    SIngle sign on with tower: https://docs.ansible.com/ansible-tower/latest/html/administration/ent_auth.html
+    Ansible Role tests with molecule: https://www.ansible.com/blog/developing-and-testing-ansible-roles-with-molecule-and-podman-part-1
+    Ansible Variable Precedence: https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
+    Ansible tags: https://docs.ansible.com/ansible/latest/user_guide/playbooks_tags.html
+    Loops & Loop Controls: https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#adding-controls-to-loops
+    Role for postgres HA https://github.com/samdoran/ansible-role-pgsql-replication
+    Getting started with GIT: https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
+    Lab 1 github: https://github.com/tonykay/ansible_flask_app_loader_all_in_one.git
+    Include vs Import: https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse.html#includes-dynamic-re-use
+    lookup plugins: https://docs.ansible.com/ansible/latest/plugins/lookup.html#using-lookup-plugins
+    Ansible tower and automation hub: https://www.ansible.com/blog/installing-and-using-collections-on-ansible-tower
+    Wilson's Tower Setup with awx.awx: https://github.com/wilson-walrus/ansible_advanced_tower_conf
+    Ansible Conditionals: https://docs.ansible.com/ansible/latest/user_guide/playbooks_conditionals.html
+    Adding python venvs to tower: https://calgaryrhce.ca/blog/2019/07/19/adding-python-virtual-environments-venvs-to-ansible-tower/
+    delegate_to: https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html
+    Ansible Vault: https://docs.ansible.com/ansible/latest/user_guide/vault.html
+    Git Tutorial: https://git-scm.com/docs/gittutorial
+
+Updating lab environments with adhoc commands
+
+Multi-Tier
+sudo su - devops
+ansible all -m yum -a "name='*' state=latest" -b
+ansible all -m reboot -b
+
+sudo yum update -y
+reboot
+
+VIM configuration to make ansible life easier
+~/.vimrc 
+autocmd FileType yaml setlocal ts=2 sw=2 ai et cuc
+
+Get around auto indent in vim with set paste command
+:set paste
+    
+Lab Fixes
+
+Skip python3 install on control node
+
+In Refactor pass 1 DO NOT install python3 for ansible-review, instead use yum to install the python2 version
+sudo yum install ansible-review
+
+Hosts app-01 not found
+
+Edit the hosts file in the git repository to reflect the correct environment:
+ 
+[load_balancers]
+frontend1 
+ 
+[app_servers] 
+app1 
+app2 
+ 
+[database_servers] 
+appdb1 
+ 
+[internal:children] 
+load_balancers 
+app_servers 
+database_servers
+
+Error for python-psycopg2
+
+either install manually or add to packages list in "Deploy, configure, and populate flask repo and virtualenv" vars
+
+    app_yum_packages: 
+      - autoconf 
+      - automake 
+      - git      
+      - gcc      
+      - libtool  
+      - python3  
+      - python-psycopg2
+
+smoketest fix for hard coded host:
+
+- name: End to end smoke tests 
+  hosts: app_servers 
+  become: false 
+  gather_facts: false 
+  tags: 
+    - smoketest 
+  vars:
+    guid: cd58
+  tasks: 
+        
+    - name: Check webserver for correct response 
+      uri: 
+        url: "http://frontend1.{{ guid }}.example.opentlc.com/ping" 
+        return_content: yes 
+      until: '"alive" in result.content' 
+      retries: 10 
+      delay: 1 
+      register: result 
+      delegate_to: localhost
+      
+Ansible Tower Lab
+
+ansible tower 3.8 manifest
+
+SCP from my server to your control host, password is: VWhCpdqQ7MKR
+
+scp wharris-redhat.com@control.5207.example.opentlc.com:~/tower_manifest.zip .
+
+Playbook to upload licence file. Requires awx.awx collection installed
+
+ansible-galaxy collection install awx.awx
+
+with requirements.yml
+ansible-galaxy collection install -r requirements.yml
+
+requirements.yml:
+--- 
+collections: 
+- name: awx.awx 
+
+import_licence.yml:
+--- 
+- name: import my tower license 
+  hosts: localhost 
+  connection: local 
+  gather_facts: false 
+  become: false 
+  vars: 
+    tower_manifest: /home/devops/tower_manifest.zip 
+  tasks: 
+    - name: import tower license with awx.awx collection 
+      awx.awx.tower_license: 
+        manifest: "{{ tower_manifest }}" 
+        eula_accepted: true 
+        tower_host: "{{ tower_hostname }}" 
+        tower_username: "{{ tower_admin_username | default('admin') }}" 
+        tower_password: "{{ tower_admin_password }}" 
+        validate_certs: false
+
+Tower-cli configuration
+
+sudo yum install ansible-tower-cli
+
+create ~/.tower_cli.cfg
+
+[general] 
+host = https://tower2.5207.example.opentlc.com 
+username = admin 
+password = redhat123 
+verify_ssl = False
+
+Using Ansible Tower Lab
+
+Update repository location
+
+postgres_rhel7_repo: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+Openstack Labs:
+
+Issues manage_security_groups
+
+Bug: Unrecognized attribute(s) 'remote_address_group_id'
+to resolve downgrade openstacksdk to version 0.52
+
+Be in the openstack_venv
+source ~/openstack_venv/bin/activate
+
+pip uninstall openstacksdk
+pip install 'openstacksdk==0.52.0'
+
+Accessing the created servers with ssh 2 methods:
+    
+Method 1:
+
+Use ssh key uploaded into openstack servers
+
+ssh -i ~/.ssh/ansible_ssh_key cloud-user@public.ip.address
+
+Method 2:
+
+Download openstack.pem (the private key for the public key we downloaded in the "userdata" after deployment)
+
+curl -o ~/.ssh/openstack.pem http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pem
+
+Fix permissions on file
+chmod 0400 ~/.ssh/openstack.pem
+
+now you should be able to ssh into the servers at the public IP address as the cloud-user
+
+ssh cloud-user@192.0.2.xxx -i ~/.ssh/openstack.pem
+
+Provide Repos to openstack servers
+
+Ensure you have the ~/.ssh/config set on the openstack system
+
+Host * 
+  User cloud-user 
+  IdentityFile ~/.ssh/openstack.pem 
+  ControlMaster auto 
+  ControlPath /tmp/%h-%r 
+  ControlPersist 5m 
+  UserKnownHostsFile /dev/null 
+  StrictHostKeyChecking no
+
+Create a hosts file to match your openstack servers, replace the ip addresses for the appropriate ones in your environment (openstack server list)
+
+[load_balancers] 
+frontend1 ansible_host=192.0.2.176 
+ 
+[app_servers] 
+app1 ansible_host=192.0.2.161 
+app2 ansible_host=192.0.2.183 
+ 
+[database_servers] 
+appdb1 ansible_host=192.0.2.195 
+ 
+[all:vars] 
+ansible_user=cloud-user 
+ansible_ssh_private_key_file=~/.ssh/openstack.pem 
+ 
+[internal:children] 
+load_balancers 
+app_servers 
+database_servers
+
+Get the playbooks and repository files from my system
+
+scp wharris-redhat.com@workstation-0b1b.dynamic.opentlc.com:~/repo_plays/*
+password: 5WueLTyAHAlF
+
+Run the ansible playbook openstack_repos.yml against the host file you created
+
+ansible-playbook openstack_repos.yml -i hosts
+
+Update and reboot servers to prepare for site.yml
+
+ansible all -m yum -a 'name='*' state=latest' -b -i hosts && ansible all -m reboot -b -i hosts
+
+
+
+
+
+
+
